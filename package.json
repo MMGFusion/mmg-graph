@@ -1,0 +1,24 @@
+{
+  "name": "mmg-graph",
+  "version": "1.0.0",
+  "description": "This package allows third-party apps to access resources from MMG-Fusion",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MMGFusion/mmg-graph.git"
+  },
+  "author": "MMG-Fusion",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MMGFusion/mmg-graph/issues"
+  },
+  "homepage": "https://github.com/MMGFusion/mmg-graph#readme",
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6"
+  }
+}
