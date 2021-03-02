@@ -45,7 +45,7 @@ const MMG = function({
   }
   
   this.verifySignature = (bid, ts, signature)=>{
-    if (Math.abd(Date.now() - ts) > 10000){
+    if (Math.abs(Date.now() - ts) > 10000){
       //this means that it might be a replay
       return false
     }
