@@ -1,9 +1,12 @@
 const BASE_URL = 'http://api.soothing.dental:3000'
 const ACCESS_TOKEN_EP = `${BASE_URL}/app/token`
-const CALLS_EP = `${BASE_URL}/graph/calls`
-const LEADS_EP = `${BASE_URL}/graph/leads`
-const CALL_EP = `${BASE_URL}/graph/call`
-const DOWNLOAD_CALL_EP = `${BASE_URL}/graph/call/download`
+
+const endpoints = {
+  get_leads : `${BASE_URL}/graph/leads`,
+  get_calls : `${BASE_URL}/graph/calls`,
+  lead_details : `${BASE_URL}/graph/lead`,
+  download_call : `${BASE_URL}/graph/call/download`
+}
 
 const request = require('request-promise');
 const crypto = require('crypto');
@@ -43,6 +46,10 @@ const MMG = function({
     
     return request(options)
   }
+  
+  Object.keys(endpoints).forEach(ep=>{
+    this[ep] = params=>this.request(ep, params)
+  })
   
   this.verifySignature = (bid, ts, signature)=>{
     if (Math.abs(Date.now() - ts) > 10000){
