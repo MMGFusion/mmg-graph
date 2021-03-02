@@ -77,7 +77,7 @@ const MMG = function({
   return this
 }
 
-module.exports = MMGClient;
+module.exports = MMG;
 
 
 
