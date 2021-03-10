@@ -1,6 +1,6 @@
 {
   "name": "mmg-graph",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "This package allows third-party apps to access resources from MMG-Fusion",
   "main": "index.js",
   "scripts": {

@@ -9,7 +9,7 @@ const MMG = function({
     AUTH_CODE,
     BASE_URL
   }){
-  BASE_URL = BASE_URL || 'https://http://apigateway.mmgfusion.com';
+  BASE_URL = BASE_URL || 'https://apigateway.mmgfusion.com';
   const ACCESS_TOKEN_EP = `${BASE_URL}/app/token`
   this.CLIENT_ID = CLIENT_ID;
   this.CLIENT_SECRET = CLIENT_SECRET;
