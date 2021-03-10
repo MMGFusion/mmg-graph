@@ -6,12 +6,12 @@ MMG Fusion uses standard oAuth2 protocol for authentication and authorization an
 This library is a nodeJS interface to access MMG resources in nodejs without using REST APIs directly. 
 
 
-##Installation
+## Installation
 ```bash
 npm install mmg-graph
 ```
 
-##Basic use
+## Basic use
 ```javascript
 const MMG = require('mmg-graph');
 const MMGClient = new MMG({
@@ -31,7 +31,7 @@ const leads = await MMGClient.get_leads({
 ```
 
 
-##Functions
+## Functions
 
 
     get_leads : Get the list of leads
