@@ -39,6 +39,7 @@ const leads = await MMGClient.get_leads({
     lead_details : Get more details about a specific lead
     download_call : Download the audio file of a recorded call
     get_campaigns : Get the list of all campaigns
+    post_lead : Post a lead to a business
 
 
 ## Sample App
