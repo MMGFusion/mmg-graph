@@ -7,38 +7,56 @@ const MMG = function({
     REDIRECT_URI,
     ACCESS_TOKEN,
     AUTH_CODE,
-    BASE_URL
+    BASE_URL = 'https://apigateway.mmgfusion.com',
+    ALLOW_SECRET_AUTH
   }){
-  BASE_URL = BASE_URL || 'https://apigateway.mmgfusion.com';
   const ACCESS_TOKEN_EP = `${BASE_URL}/app/token`
   this.CLIENT_ID = CLIENT_ID;
   this.CLIENT_SECRET = CLIENT_SECRET;
   this.REDIRECT_URI = REDIRECT_URI
   this.ACCESS_TOKEN = ACCESS_TOKEN
   this.AUTH_CODE = AUTH_CODE
+  this.ALLOW_SECRET_AUTH = ALLOW_SECRET_AUTH //uses client_id and client_secret in the query for authentication instead of ACCESS_TOKEN
   
   const endpoints = {
-    get_leads : `${BASE_URL}/graph/leads`,
-    get_calls : `${BASE_URL}/graph/calls`,
-    lead_details : `${BASE_URL}/graph/lead`,
-    download_call : `${BASE_URL}/graph/call/download`,
-    get_campaigns : `${BASE_URL}/graph/campaigns`
+    get_leads : {
+      uri : `${BASE_URL}/graph/leads`
+    },
+    get_calls : {uri : `${BASE_URL}/graph/calls`},
+    lead_details : {uri : `${BASE_URL}/graph/lead`},
+    download_call : {uri : `${BASE_URL}/graph/call/download`},
+    get_campaigns : {uri : `${BASE_URL}/graph/campaigns`},
+    post_lead : {
+      uri : `${BASE_URL}/graph/lead`,
+      method : "POST"
+    }
   }
   
-  this.request = async (EP, PARAMS, RP)=>{
+  this.request = async (EP, PARAMS, RP = {})=>{
     if (!this.ACCESS_TOKEN && this.AUTH_CODE){
       await this.getAccessToken(this.AUTH_CODE)
     }
-    if (!this.ACCESS_TOKEN){
+    if (!this.ACCESS_TOKEN && !this.ALLOW_SECRET_AUTH){
       throw new Error('No access token')
       return
     }
-    const params = Object.keys(PARAMS || {}).map(cur=>`${cur}=${encodeURIComponent(PARAMS[cur])}`).join('&');
+    const auth = this.ACCESS_TOKEN? {
+      access_token : this.ACCESS_TOKEN
+    } : {
+      client_id : this.CLIENT_ID,
+      client_secret : this.CLIENT_SECRET
+    }
+    
+    const p = {...{
+      format : 'json'
+    },...PARAMS,...auth}
+    
+    const params = Object.keys(p).map(cur=>`${cur}=${encodeURIComponent(p[cur])}`).join('&');
     
     const options = {
-		  uri: `${EP}?access_token=${encodeURIComponent(this.ACCESS_TOKEN)}&${params}`,
-		  method: "GET",
-      json: true,
+		  uri: `${EP}?${params}`,
+		  method: RP.method || "GET",
+      json: RP.body || true,
     };
     
     if (RP){
@@ -47,11 +65,19 @@ const MMG = function({
       })
     }
     
-    return request(options)
+    return request(options).then(r=>{
+      if (r.type == 'error'){
+        throw new Error(r.msg)
+      }
+      return r
+    })
   }
   
   Object.keys(endpoints).forEach(ep=>{
-    this[ep] = (params,rp)=>this.request(endpoints[ep], params, rp)
+    this[ep] = (params,rp = {})=>{
+      rp.method = endpoints[ep].method || rp.method;
+      return this.request(endpoints[ep].uri, params, rp)
+    }
   })
   
   this.sign = params=>{
